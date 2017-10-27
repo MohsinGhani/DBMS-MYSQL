@@ -1,0 +1,19 @@
+CREATE DATABASE University;
+USE University;
+
+CREATE TABLE Course(cCode INT AUTO_INCREMENT, cName VARCHAR(30), PRIMARY KEY(cCode));
+CREATE TABLE Faculty(fid INT AUTO_INCREMENT, fName VARCHAR(30), fDept VARCHAR(30), PRIMARY KEY(fid));
+CREATE TABLE Students(sid INT AUTO_INCREMENT, sName VARCHAR(30), sAge INT, PRIMARY KEY(sid));
+
+INSERT INTO Course(cName) VALUES('DBMS'),('TOA'),('Linear Algebra'),('Probability'),('POM');
+SELECT * FROM Course;
+
+INSERT INTO Faculty(fName,fDept) VALUES('Mohsin Ghani','BS-CS'),('Soban','BS-SE'),('Aftab','BBA'),('Farhan','MM'),('Ali','MM');
+SELECT * FROM Faculty;
+
+INSERT INTO Students(sName,sAge) VALUES('Arbaz', 18),('Ashar', 20),('Arshu', 19),('Shayan', 22),('Soban', 10);
+SELECT * FROM Students;
+
+#TRUNCATE Course;
+#TRUNCATE Faculty;
+#TRUNCATE Students;
