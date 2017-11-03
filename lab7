@@ -1,0 +1,68 @@
+CREATE DATABASE HMS;
+USE HMS;
+
+CREATE TABLE Doctors(drID INT AUTO_INCREMENT, drName VARCHAR(30), drDept VARCHAR(30), drFee VARCHAR(30), PRIMARY KEY(drID));
+CREATE TABLE Patients(pID INT AUTO_INCREMENT, pName VARCHAR(30), pAge int, pHistory VARCHAR(100), PRIMARY KEY(pID));
+CREATE TABLE Visitors (DRID INT,PID INT, FOREIGN KEY(drID) REFERENCES Doctors(drID), FOREIGN KEY(pID) REFERENCES Patients(pID), noOfVisits VARCHAR(30));
+
+INSERT INTO Doctors(drName,drDept,drFee) VALUES('Soban','General','2500'),('Shuzzam','Heart','5000'),('Shamir','General','1000'),('Mohsin','Aurth','2000');
+SELECT * FROM Doctors;
+
+INSERT INTO Patients(pName,pAge,pHistory) VALUES('Shamir',20,'He is Beemar'),('Sheroz',22,'He is Beemar'),('Abbas',25,'He is Beemar'),('Aabru',15,'He is also Beemar');
+SELECT * FROM Patients;
+
+INSERT INTO Visitors(DRID,PID,noOfVisits) VALUES(2,2,'10'),(3,3,'05'),(4,4,'02'),(5,5,'30');
+SELECT * FROM Visitors;
+
+#Step#4
+SELECT drID, drName FROM Doctors;
+SELECT pName, pHistory FROM Patients;
+
+#Step#5
+SELECT drName, drFee * 2  FROM Doctors;
+
+#STEP#6
+SELECT drName, drFee * 2 Special_Fee  FROM doctors;
+
+#STEP#7
+SELECT * FROM Doctors ORDER BY drName;
+SELECT * FROM Doctors ORDER BY drFee;
+
+#STEP#8
+SELECT * FROM Patients ORDER BY pID desc;
+SELECT * FROM Patients ORDER BY pAge desc;
+
+#Step#9
+SELECT PID, noOfVisits FROM Visitors ORDER BY 2;
+
+#Step#10
+SELECT drName, drFee * 2 Special_Fee FROM doctors ORDER BY Special_Fee;
+
+#Step#11
+SELECT pID FROM Patients WHERE pName = 'Arbaz';
+SELECT drName FROM Doctors WHERE drFee > 2500;
+SELECT pName FROM Patients WHERE pAge > 20 AND pHistory = 'He is Beemar';
+
+#Step#12 // Don’t want to see duplicate values.
+SELECT DISTINCT pName FROM Patients;
+
+#Step13: Display all records with column values between a specified range
+SELECT pID, drID, noOfVisits FROM Visitors WHERE noOfVisits BETWEEN 5 AND 10;
+
+#Step14: Display a record with column value matches a value in a given list.
+SELECT pID, drID, noOfVisits FROM Visitors WHERE noOfVisits IN(5, 10); #show only 5 and 10
+
+#Step15: Don’t know the exact value to be picked, just provide a pattern or at least a character as a hint.
+SELECT drName, drFee FROM Doctors WHERE drName LIKE '_ohsin';
+SELECT drName, drFee FROM Doctors WHERE drName LIKE '%m'; #end at M
+SELECT drName, drFee FROM Doctors WHERE drName LIKE '%i_';
+# _ = single char
+# %a = end at a
+
+#Step#16
+SELECT pName FROM Patients WHERE pAge IS NULL;
+
+#DROP DATABASE HMS
+#TRUNCATE Doctors;
+#TRUNCATE Patients;
+#TRUNCATE Visitors;
