@@ -1,17 +1,60 @@
 CREATE DATABASE HMS;
 USE HMS;
 
-CREATE TABLE Doctors(drID INT AUTO_INCREMENT, drName VARCHAR(30), drDept VARCHAR(30), drFee VARCHAR(30), PRIMARY KEY(drID));
-CREATE TABLE Patients(pID INT AUTO_INCREMENT, pName VARCHAR(30), pAge int, pHistory VARCHAR(100), PRIMARY KEY(pID));
-CREATE TABLE Visitors (DRID INT,PID INT, FOREIGN KEY(drID) REFERENCES Doctors(drID), FOREIGN KEY(pID) REFERENCES Patients(pID), noOfVisits VARCHAR(30));
 
-INSERT INTO Doctors(drName,drDept,drFee) VALUES('Soban','General','2500'),('Shuzzam','Heart','5000'),('Shamir','General','1000'),('Mohsin','Aurth','2000');
+########################################################################
+# A) Write Queries to display the data as per the provided requirements.
+########################################################################
+
+#1- List the doctors whose names contain letter ‘m’ and are from cardiology department.
+SELECT * FROM Doctors where drName LIKE '%m%' AND drDept = 'cardiology';
+
+#2- List the patients who are teenagers and are affected from malaria.
+SELECT * FROM Patients WHERE pAge <= 18 AND pHistory = 'malaria';
+
+#3- List the patients who have visited a specific doctor (check for any doctor) only once.
+SELECT * FROM Patients where drID = 5;
+
+#4- List the patients who are affected from either malaria or hepatitis and their age falls between 30 and 40. Also list the patients in descending order of their ages.
+SELECT * FROM Patients WHERE (pHistory = 'malaria' OR pHistory = 'hepatitis') AND pAge BETWEEN 30 AND 40 ORDER BY pAge desc;
+
+#5- List, in ascending order, the patients who have visited 2 specific doctors (check for any 2 doctors) twice or more.
+SELECT * FROM Patients where drID = 5 AND drID = 10;
+
+#6- List the name of the doctors, who take fee in hundreds.
+SELECT * FROM Doctors WHERE drFee IN(100);
+
+########################################################################
+# B) 	What else can be extracted from the tables?
+########################################################################
+
+# QUERY 1
+SELECT * FROM Doctors WHERE drDept = 'General' AND drFee <= 1000;
+
+# QUERY 2
+SELECT * FROM Patients WHERE (pAge BETWEEN 20 AND 40) AND pName LIKE '%a%' AND pName LIKE 'm%';
+
+# QUERY 3
+SELECT * FROM Visitors WHERE (vID BETWEEN 1 AND 10) AND DRID BETWEEN 1 AND 4 AND PID = 3;
+
+##########################################################################
+##########################################################################
+
+CREATE TABLE Doctors(drID INT AUTO_INCREMENT, drName VARCHAR(30), drDept VARCHAR(30), drFee VARCHAR(30), PRIMARY KEY(drID));
+CREATE TABLE Patients(pID INT AUTO_INCREMENT, pName VARCHAR(30), pAge int, pHistory VARCHAR(100), PRIMARY KEY(pID), drID INT, FOREIGN KEY(drID) REFERENCES Doctors(drID));
+CREATE TABLE Visitors (vID INT AUTO_INCREMENT, primary key(vID), DRID INT,PID INT, FOREIGN KEY(drID) REFERENCES Doctors(drID), FOREIGN KEY(pID) REFERENCES Patients(pID), noOfVisits VARCHAR(30));
+
+INSERT INTO Doctors(drName,drDept,drFee) VALUES('Dr Ashwaq Ali','General surgery','1500'),('Dr Anees Ali','Gynaecology','1100'),('Dr Shams Ilahi','Haematology','700'),('Dr Kasim Khan','Microbiology','800');
+INSERT INTO Doctors(drName,drDept,drFee) VALUES('Dr Kamal Munawar','Neonatal unit','100');
+UPDATE Doctors SET drDept='cardiology' WHERE drID= 4 ;
 SELECT * FROM Doctors;
 
-INSERT INTO Patients(pName,pAge,pHistory) VALUES('Shamir',20,'He is Beemar'),('Sheroz',22,'He is Beemar'),('Abbas',25,'He is Beemar'),('Aabru',15,'He is also Beemar');
+INSERT INTO Patients(pName,pAge,pHistory, drID) VALUES('Noah',20,'Abscess',1),('Liam',22,'Anotia',2),('Mason',25,'Anthrax',3),('Jacob',15,'Appendicitis',4),('William',18,'Apraxia',5),('Ethan',24,'Argyria',5),('James',26,'Arthritis',6),('Alexander',35,'malaria',7),('Michael',31,'hepatitis',7),('Benjamin',36,'malaria',8),('Elijah',12,'Cerebral palsy',9),('Daniel',29,'Cholera',10),('Aiden',19,'Colitis',10),('Logan',55,'hepatitis',11),('Matthew',25,'Ebola',5),('Lucas',15,'Cretinism',12);
+INSERT INTO Patients(pName,pAge,pHistory) VALUES('Kaka Shams',34,'hepatitis');
+UPDATE Patients SET pHistory='malaria' WHERE pID= 4 ;
 SELECT * FROM Patients;
 
-INSERT INTO Visitors(DRID,PID,noOfVisits) VALUES(2,2,'10'),(3,3,'05'),(4,4,'02'),(5,5,'30');
+INSERT INTO Visitors(DRID,PID,noOfVisits) VALUES(1,1,'5'),(1,2,'8'),(1,3,'7'),(2,1,'10'),(2,5,'15'),(3,2,'18'),(2,4,'20'),(3,3,'29'),(3,1,'4'),(1,5,'1'),(3,10,'18'),(3,5,'2'),(10,1,'19'),(11,2,'3'),(9,2,'4');
 SELECT * FROM Visitors;
 
 #Step#4
@@ -39,30 +82,24 @@ SELECT PID, noOfVisits FROM Visitors ORDER BY 2;
 SELECT drName, drFee * 2 Special_Fee FROM doctors ORDER BY Special_Fee;
 
 #Step#11
-SELECT pID FROM Patients WHERE pName = 'Arbaz';
-SELECT drName FROM Doctors WHERE drFee > 2500;
-SELECT pName FROM Patients WHERE pAge > 20 AND pHistory = 'He is Beemar';
+SELECT pID FROM Patients WHERE pName = 'Abbas';
+SELECT drName FROM Doctors WHERE drFee > 500;
+SELECT pName FROM Patients WHERE pAge > 30 AND pHistory = 'TB';
 
 #Step#12 // Don’t want to see duplicate values.
 SELECT DISTINCT pName FROM Patients;
 
 #Step13: Display all records with column values between a specified range
-SELECT pID, drID, noOfVisits FROM Visitors WHERE noOfVisits BETWEEN 5 AND 10;
+SELECT pID, drID, noOfVisits FROM Visitors WHERE noOfVisits BETWEEN 5 AND 10;	
 
 #Step14: Display a record with column value matches a value in a given list.
 SELECT pID, drID, noOfVisits FROM Visitors WHERE noOfVisits IN(5, 10); #show only 5 and 10
 
 #Step15: Don’t know the exact value to be picked, just provide a pattern or at least a character as a hint.
-SELECT drName, drFee FROM Doctors WHERE drName LIKE '_ohsin';
-SELECT drName, drFee FROM Doctors WHERE drName LIKE '%m'; #end at M
-SELECT drName, drFee FROM Doctors WHERE drName LIKE '%i_';
-# _ = single char
-# %a = end at a
+SELECT drName, drFee FROM Doctors WHERE drName LIKE '%Moh%';
+SELECT drName, drFee FROM Doctors WHERE drDept LIKE '_u%';
 
 #Step#16
 SELECT pName FROM Patients WHERE pAge IS NULL;
 
-#DROP DATABASE HMS
-#TRUNCATE Doctors;
-#TRUNCATE Patients;
-#TRUNCATE Visitors;
+
