@@ -1,0 +1,73 @@
+CREATE DATABASE RakaposhiTravelAndTours;
+ USE RakaposhiTravelAndTours;
+ 
+ CREATE TABLE tour(tourID INT auto_increment, PRIMARY KEY(tourID), tourName VARCHAR(30), tourDuration VARCHAR(30), tourPrice int, guideID int, foreign key(guideID) references guide(guideID));
+ INSERT INTO tour(tourName,tourDuration,tourPrice,guideID) VALUES
+ ('Murree Hills Tours','6 Days',16250,5),
+('Kaghan Valley Tours','3 Days',1125,7),
+('Kashmir Tours','4 Days',13200,9),
+('Gilgit and Hunza Tours','5 Days',17000,2),
+('Skardu Tours','3 Days',11250,9),
+('Thar Tours','3 Days',9500,8),
+('Fairy Valley Tours','6 Days',20000,6),
+('Swat Valley Tours Tours','4 Days',17400,3),
+('Astore and Rama','6 Days',21300,4);
+SELECT * FROM tour;
+
+CREATE TABLE location(locationID INT auto_increment, primary key(locationID), locationName varchar(30));
+INSERT INTO location(locationName) VALUES('Nathiya Gali'),('Ayubia'),('Aliti Fort'),('Bhurban'),('Daman-e-koh'),('Attabad Lake'),('Sost'),
+('Balakat'),('Pagwari'),('Shogran'),('Kohala'),('Pir Chinasi'),('Shangrila Tour'),('Sadpara Lake'),('Kochora Lake');
+ Select * from location;
+ 
+ CREATE TABLE tourLocation(locationName varchar(30), tourID int, foreign key(tourID) references tour(tourID));
+ INSERT INTO tourLocation(locationName,tourID) VALUES
+ ('Nathiya Gali',1),('Ayubia',1),('Aliti Fort',4),('Bhurban',1),('Daman-e-koh',1),('Attabad Lake',4),('Sost',4),('Balakat',2),
+ ('Pagwari',3),('Shogran',2),('Kohala',3),('Pir Chinasi',3),('Shangrila Tour',5);
+ 
+ 
+CREATE TABLE guide(guideID int auto_increment, primary key(guideID), fName varchar(30), lName varchar(30), contactNo varchar(30));
+INSERT INTO guide(fName,lName,contactNo) VALUES
+('Yaqoob','Khan','03002255669'),
+('Ahmed','dawood','0334450000'),
+('Amaan','Farooq','0345845155'),
+('Junaid','khan','0334455456'),
+('Ali','Waseem','0334445624'),
+('Gul','Ahmed','0334457124'),
+('Sohail','Ali','0334484524'),
+('Salaar','Umar','0334484554'),
+('bahadur','Usman','0334855454');
+ SELECT * from guide;
+ 
+ 
+##############################################
+#a
+SELECT tourPrice *4 AS CostFor4 FROM tour;
+
+#b
+SELECT * FROM tour where tourPrice < 12000;
+
+#c
+SELECT * FROM guide where fName = 'Ahmed' OR lName = 'Ahmed';
+
+#d
+SELECT * FROM tour where tourDuration = '6 days' AND tourPrice BETWEEN 10000 and 20000;
+
+#e
+SELECT tourID,tourName,tourPrice FROM tour where tourName LIKE '%Valley%';
+
+#f
+SELECT * FROM location where locationName LIKE '%Lake%';
+
+#g
+SELECT * FROM tour where tourName = 'Kashmir Tours' OR tourName = 'Skardu Tours';
+
+#h
+SELECT tourDuration FROM tour where tourName = 'Astore and Rama';
+
+#i
+SELECT * FROM tourLocation where tourID = 1;
+
+#j
+SELECT * FROM tour where tourName LIKE '__a%';
+
+drop database RakaposhiTravelAndTours;
