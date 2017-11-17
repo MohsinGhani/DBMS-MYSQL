@@ -1,0 +1,132 @@
+CREATE DATABASE airline; #1
+USE airline; #2
+
+#5
+CREATE TABLE planes(planeID INT AUTO_INCREMENT, PRIMARY KEY(planeID), modalName VARCHAR(20), 
+aircraftType VARCHAR(30), engineType VARCHAR(30), acCategory VARCHAR(20), 
+numberOfSeats VARCHAR(30), pilotsDetail int);
+
+#7
+ALTER TABLE planes ADD CONSTRAINT pilotsDetail FOREIGN KEY (pilotsDetail) REFERENCES pilots_plane(id) ON DELETE CASCADE; 
+SELECT * FROM planes;
+
+#8
+INSERT INTO planes(modalName, aircraftType, engineType, acCategory,numberOfSeats) 
+VALUES('BT2010','Balloon','Turbo-prop','Sea', '100 to 120'),
+('BT2009','Gyroplane','Turbo-prop','Amphibian', '150 to 160'),
+('JUT2011','Blimp/Dirigible','Ramjet','Amphibian', '150 to 160'),
+('JUT2012','Fixed wing single engine','2 Cycle','Land', '120 to 130'),
+('JUT2010','Fixed wing multi engine','4 Cycle','Sea', '120 to 130'),
+('JBT2016','Rotorcraft','Turbo-jet','Unknown', '120 to 130'),
+('JBT2012','Weight-shift-control','Electric','Land', '120 to 130'),
+('JTC2012','Parachute','Turbo-jet','Sea', '120 to 125'),
+('JTC2012','Powered','Turbo-jet','Sea', '100 to 110'),
+('JTC2012','shift-control','Turbo-jet','Sea', '120 to 130');
+SELECT * FROM planes;
+
+#10
+UPDATE planes SET pilotsDetail = 1 WHERE planeID = 1;
+UPDATE planes SET pilotsDetail = 2 WHERE planeID = 2;
+UPDATE planes SET pilotsDetail = 3 WHERE planeID = 3;
+UPDATE planes SET pilotsDetail = 4 WHERE planeID = 4;
+UPDATE planes SET pilotsDetail = 5 WHERE planeID = 5;
+UPDATE planes SET pilotsDetail = 6 WHERE planeID = 6;
+UPDATE planes SET pilotsDetail = 7 WHERE planeID = 7;
+UPDATE planes SET pilotsDetail = 8 WHERE planeID = 8;
+UPDATE planes SET pilotsDetail = 9 WHERE planeID = 9;
+UPDATE planes SET pilotsDetail = 10 WHERE planeID = 10;
+
+#12
+CREATE TABLE flights(flightID INT AUTO_INCREMENT, PRIMARY KEY(flightID), flightName VARCHAR(20), fromCountry VARCHAR(30), 
+destinationAirport VARCHAR(30), flightTime TIME, flightDate DATE, availableSeats VARCHAR(20), 
+planeID INT, foreign key(planeID) references planes(planeID),pilotDetail int);
+
+#14
+ALTER TABLE flights ADD CONSTRAINT pilotDetail FOREIGN KEY (pilotDetail) REFERENCES pilots_flights(id) ON DELETE CASCADE; 
+
+#15
+INSERT INTO flights(flightName,fromCountry,destinationAirport,flightTime,flightDate,availableSeats,planeID) VALUES
+('FZ-329','Dubai','Jeddah','01:05','2017-09-17','100 to 120',2),
+('PK-300','Sharjah','Quetta','01:20','2017-09-17','100 to 120',3),
+('ER-500','Bangkok','Istanbul','01:30','2017-09-17','100 to 120',4),
+('EK-605','Doha','Jeddah','01:40','2017-09-17','100 to 120',5),
+('QR-605','Multan','Islamabad','01:50','2017-09-17','100 to 120',6),
+('PK-330','Faisalabad','Medinah','01:55','2017-09-17','100 to 120',7),
+('WY-322','Abu Dhabi','Jeddah','01:55','2017-09-17','100 to 120',8),
+('TK-709','Jeddah','Jeddah','01:15','2017-09-17','100 to 120',9),
+('FZ-300','Muscat','Istanbul','01:10','2017-09-17','100 to 120',10);
+
+#18
+UPDATE flights SET pilotDetail = 1 WHERE flightID = 1;
+UPDATE flights SET pilotDetail = 2 WHERE flightID = 2;
+UPDATE flights SET pilotDetail = 3 WHERE flightID = 3;
+UPDATE flights SET pilotDetail = 4 WHERE flightID = 4;
+UPDATE flights SET pilotDetail = 5 WHERE flightID = 5;
+UPDATE flights SET pilotDetail = 6 WHERE flightID = 6;
+UPDATE flights SET pilotDetail = 7 WHERE flightID = 7;
+UPDATE flights SET pilotDetail = 8 WHERE flightID = 8;
+UPDATE flights SET pilotDetail = 9 WHERE flightID = 9;
+UPDATE flights SET pilotDetail = 10 WHERE flightID = 10;
+
+SELECT * FROM flights;
+
+#3
+CREATE TABLE pilots(pilotID INT auto_increment, primary key(pilotID), name VARCHAR(30), address varchar(50), contact varchar(20), route varchar(50));
+
+#4
+INSERT INTO pilots(name,address,contact,route) VALUES
+('Noah','777 Brockton Avenue, Abington MA 2351','1937 546546','Bucharest – Palermo'),		('Elijah','121 Worcester Rd, Framingham MA 1701','20 7412 7513','Bucharest – Palermo'),
+('Liam','30 Memorial Drive, Avon MA 2322','1937 546060','Chania – Athens'),			('Daniel','677 Timpany Blvd, Gardner MA 1440','20 7412 7536	','Chania – Athens'),
+('Mason','250 Hartford Avenue, Bellingham MA 2019','20 7412 7735','Chania – Pafos'),	('Aiden','337 Russell St, Hadley MA 1035','20 7412 7894','Chania – Pafos'),
+('Jacob','700 Oak Street, Brockton MA 2301','1937 546060','Chania – Thessaloniki'),			('Logan','295 Plymouth Street, Halifax MA 2338','20 7412 7377','Chania – Thessaloniki'),
+('William','66-4 Parkhurst Rd, Chelmsford MA 1824','20 7412 7676','Cologne – Berlin (SXF)'),	('Matthew','1775 Washington St, Hanover MA 2339','20 7412 7739','Cologne – Berlin (SXF)'),
+('Ethan','591 Memorial Dr, Chicopee MA 1020','1937 546070','Edinburgh – Szczecin'),		('Lucas','280 Washington Street, Hudson MA 1749','20 7412 7565','Edinburgh – Szczecin'),
+('James','55 Brooksby Village Way, Danvers MA 1923','20 7412 7676','Glasgow – Las Palmas'),	('Jackson','20 Soojian Dr, Leicester MA 1524','1937 546060','Glasgow – Las Palmas'),
+('Alexander','137 Teaticket Hwy, East Falmouth MA 2536','20 7412 767','Hamburg – Edinburgh'),('David','11 Jungle Road, Leominster MA 1453','1937 546060','Hamburg – Edinburgh'),
+('Michael','42 Fairhaven Commons Way, Fairhaven MA 2719','20 7412 7454','Hamburg – Katowice'),('Oliver','301 Massachusetts Ave, Lunenburg MA 1462','20 7412 7734','Hamburg – Katowice'),
+('Benjamin','374 William S Canning Blvd, Fall River MA 2721','20 7412 7831','Hamburg – Oslo (TF)'),('Jayden','780 Lynnway, Lynn MA 1905','20 7412 7614	','Hamburg – Oslo (TF)');
+SELECT * FROM pilots;
+
+#13
+CREATE TABLE pilots_flights(id INT auto_increment, primary key(id), flightID INT, foreign key(flightID) references flights(flightID), 
+p1ID INT, foreign key(p1ID) references pilots(pilotID), p2ID INT, foreign key(p2ID) references pilots(pilotID));
+
+#16
+INSERT INTO pilots_flights(flightID) VALUES(1),(2),(3),(4),(5),(6),(7),(8),(9),(10);
+
+#17
+UPDATE pilots_flights SET p1ID = 1, p2ID = 2 WHERE id = 1;
+UPDATE pilots_flights SET p1ID = 3, p2ID = 4 WHERE id = 2;
+UPDATE pilots_flights SET p1ID = 5, p2ID = 6 WHERE id = 3;
+UPDATE pilots_flights SET p1ID = 7, p2ID = 8 WHERE id = 4;
+UPDATE pilots_flights SET p1ID = 9, p2ID = 10 WHERE id = 5;
+UPDATE pilots_flights SET p1ID = 11, p2ID = 12 WHERE id = 6;
+UPDATE pilots_flights SET p1ID = 13, p2ID = 14 WHERE id = 7;
+UPDATE pilots_flights SET p1ID = 15, p2ID = 16 WHERE id = 8;
+UPDATE pilots_flights SET p1ID = 17, p2ID = 18 WHERE id = 9;
+UPDATE pilots_flights SET p1ID = 19, p2ID = 20 WHERE id = 10;
+
+SELECT * FROM pilots_flights;
+
+#6
+CREATE TABLE pilots_plane(id INT auto_increment, primary key(id), planeID INT, foreign key(planeID) references planes(planeID), 
+p1ID INT, foreign key(p1ID) references pilots(pilotID), p2ID INT, foreign key(p2ID) references pilots(pilotID));
+
+#9
+INSERT INTO pilots_plane(planeID) VALUES(1),(2),(3),(4),(5),(6),(7),(8),(9),(10);
+
+#11
+UPDATE pilots_plane SET p1ID = 1, p2ID = 2 WHERE id = 1;
+UPDATE pilots_plane SET p1ID = 3, p2ID = 4 WHERE id = 2;
+UPDATE pilots_plane SET p1ID = 5, p2ID = 6 WHERE id = 3;
+UPDATE pilots_plane SET p1ID = 7, p2ID = 8 WHERE id = 4;
+UPDATE pilots_plane SET p1ID = 9, p2ID = 10 WHERE id = 5;
+UPDATE pilots_plane SET p1ID = 11, p2ID = 12 WHERE id = 6;
+UPDATE pilots_plane SET p1ID = 13, p2ID = 14 WHERE id = 7;
+UPDATE pilots_plane SET p1ID = 15, p2ID = 16 WHERE id = 8;
+UPDATE pilots_plane SET p1ID = 17, p2ID = 18 WHERE id = 9;
+UPDATE pilots_plane SET p1ID = 19, p2ID = 20 WHERE id = 10;
+
+SELECT * FROM pilots_plane;
+
+drop database airline;
