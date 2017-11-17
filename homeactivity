@@ -2,10 +2,22 @@ CREATE DATABASE airline;
 USE airline;
 
 CREATE TABLE planes(planeID INT AUTO_INCREMENT, PRIMARY KEY(planeID), modalName VARCHAR(20), aircraftType VARCHAR(30), engineType VARCHAR(30), acCategory VARCHAR(20), numberOfSeats VARCHAR(30));
+INSERT INTO planes(modalName, aircraftType, engineType, acCategory,numberOfSeats) 
+VALUES('BT2010','Balloon','Turbo-prop','Sea', '100 to 120'),
+('BT2009','- Blimp/Dirigible','Turbo-prop','Amphibian', '150 to 160'),
+('JUT2011','- Blimp/Dirigible','Turbo-prop','Amphibian', '150 to 160'),
+('JUT2012','- Fixed wing single engine','Turbo-jet','Light Sport', '120 to 130');
+
+SELECT * FROM planes;
 
 CREATE TABLE flights(flightID INT AUTO_INCREMENT, PRIMARY KEY(flightID), flightName VARCHAR(20), flightCity VARCHAR(20), flightCountry VARCHAR(30), destinationAirport VARCHAR(30), currentAirport VARCHAR(30), flightTime TIME, flightDate DATE, availableSeats VARCHAR(20), planeID INT, foreign key(planeID) references planes(planeID));
 SELECT * FROM flights;
 
-CREATE TABLE pilots_flights(id INT auto_increment, primary key(id), flightID INT, foreign key(flightID) references flights(flightID), p1ID INT, foreign key(pilot1ID) references pilots(pilotID), pilot2ID INT, foreign key(pilot2ID) references pilots(pilotID));
+CREATE TABLE pilots(pilotID INT auto_increment, primary key(pilotID), name VARCHAR(30), address varchar(50), contact varchar(20), route varchar(50));
+SELECT * FROM pilots;
 
-CREATE TABLE pilots(pilotID INT auto_increment, primary key(pilotID), name VARCHAR(30), address varchar(50), contact varchar(20))
+CREATE TABLE pilots_flights(id INT auto_increment, primary key(id), flightID INT, foreign key(flightID) references flights(flightID), p1ID INT, foreign key(p1ID) references pilots(pilotID), p2ID INT, foreign key(p2ID) references pilots(pilotID));
+SELECT * FROM pilots_flights;
+
+CREATE TABLE pilots_plane(id INT auto_increment, primary key(id), planeID INT, foreign key(planeID) references planes(planeID), p1ID INT, foreign key(p1ID) references pilots(pilotID), p2ID INT, foreign key(p2ID) references pilots(pilotID));
+SELECT * FROM pilots_plane;
