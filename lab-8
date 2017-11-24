@@ -66,3 +66,54 @@ SELECT p.pID , d.drID, p.pName, d.drName FROM Patients p , Doctors d WHERE p.pNa
 
 # Non Equijoins is used to return result from two or more tables where exact join is not possible.
 SELECT p.pID, p.pName, p.pAge, v.drID, v.noOfVisits FROM Patients p, Visitors v WHERE v.noOfVisits BETWEEN 5 AND 10;
+
+
+################################ LAB ACTIVITY #########################################
+
+#1- Add town and city attributes to the patient’s column. [Insert 5 rows]
+ALTER TABLE Patients ADD (town VARCHAR(20) DEFAULT 'PECHS', city VARCHAR(20) DEFAULT 'KARACHI');
+INSERT INTO Patients(pName,pAge,pHistory,town,city) VALUES('Arrshy',18,'He is bemaar','Malir Cant','Karachi'),
+('Bukhshat',20,'He is bemaar','Sadar','Karachi'),('Soban',12,'He is bemaar','Malir Cant','Karachi'),
+('Bashira',25,'He is bemaar','Malir 15','Karachi'),('Mukhtar',16,'He is bemaar','Sirjani','Karachi');
+SELECT * FROM Patients;
+
+#2- Update the previously inserted rows with the values of town and city.
+UPDATE Patients SET town = 'Gulshan', city = 'karachi' WHERE pID = '17';
+UPDATE Patients SET town = 'PECHS', city = 'karachi' WHERE pID = '18';
+UPDATE Patients SET town = 'NN', city = 'karachi' WHERE pID = '19';
+UPDATE Patients SET town = 'Nipa', city = 'karachi' WHERE pID = '20';
+UPDATE Patients SET town = 'Sadar', city = 'karachi' WHERE pID = '21';
+
+#3- Delete no_of_visits column from the visits table.
+ALTER TABLE Visitors DROP noOfVisits;
+
+#4- Add date_of_visit column to the visits table with data type as varchar. [Insert 5 rows]
+ALTER TABLE Visitors ADD (date_of_visit VARCHAR(20) NOT NULL DEFAULT '2017-11-23');
+
+#5- Update the previously inserted rows with the value of date_of_visit.
+UPDATE Visitors SET date_of_visit = '2017-11-18' WHERE pID = '1';
+UPDATE Visitors SET date_of_visit = '2017-11-11' WHERE pID = '2';
+UPDATE Visitors SET date_of_visit = '2017-11-19' WHERE pID = '3';
+UPDATE Visitors SET date_of_visit = '2017-11-20' WHERE pID = '4';
+UPDATE Visitors SET date_of_visit = '2017-11-22' WHERE pID = '5';
+
+#6- Add experience attribute to the doctors table. [Insert 5 rows]
+ALTER TABLE Doctors ADD (experience INT);
+
+#7- Update the previously inserted rows with the value of experience.
+UPDATE Doctors SET experience = 10 WHERE drID = '1';
+UPDATE Doctors SET experience = 8 WHERE drID = '2';
+UPDATE Doctors SET experience = 5 WHERE drID = '3';
+UPDATE Doctors SET experience = 8 WHERE drID = '4';
+UPDATE Doctors SET experience = 12 WHERE drID = '5';
+
+#8- Change the data type of the date_of_visit column to date.
+ALTER TABLE Visitors MODIFY COLUMN date_of_visit DATE;
+
+#9- Update the date_of_visit column for previously inserted rows.
+UPDATE Visitors SET date_of_visit = '2017-11-18' WHERE pID = '1';
+UPDATE Visitors SET date_of_visit = '2017-11-11' WHERE pID = '2';
+UPDATE Visitors SET date_of_visit = '2017-11-19' WHERE pID = '3';
+UPDATE Visitors SET date_of_visit = '2017-11-20' WHERE pID = '4';
+UPDATE Visitors SET date_of_visit = '2017-11-22' WHERE pID = '5';
+
