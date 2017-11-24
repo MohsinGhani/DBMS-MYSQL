@@ -1,0 +1,68 @@
+CREATE DATABASE HMS;
+USE HMS;
+
+CREATE TABLE Doctors(drID INT AUTO_INCREMENT, drName VARCHAR(30), drDept VARCHAR(30), drFee VARCHAR(30), PRIMARY KEY(drID));
+CREATE TABLE Patients(pID INT AUTO_INCREMENT, pName VARCHAR(30), pAge int, pHistory VARCHAR(100), PRIMARY KEY(pID), drID INT, FOREIGN KEY(drID) REFERENCES Doctors(drID));
+CREATE TABLE Visitors (vID INT AUTO_INCREMENT, primary key(vID), DRID INT,PID INT, FOREIGN KEY(drID) REFERENCES Doctors(drID), FOREIGN KEY(pID) REFERENCES Patients(pID), noOfVisits VARCHAR(30));
+
+INSERT INTO Doctors(drName,drDept,drFee) VALUES('Dr Ashwaq Ali','General surgery','1500'),('Dr Anees Ali','Gynaecology','1100'),('Dr Shams Ilahi','Haematology','700'),('Dr Kasim Khan','Microbiology','800');
+INSERT INTO Doctors(drName,drDept,drFee) VALUES('Dr Kamal Munawar','Neonatal unit','100');
+UPDATE Doctors SET drDept='cardiology' WHERE drID= 4 ;
+SELECT * FROM Doctors;
+
+INSERT INTO Patients(pName,pAge,pHistory, drID) VALUES('Noah',20,'Abscess',1),('Liam',22,'Anotia',2),('Mason',25,'Anthrax',3),('Jacob',15,'Appendicitis',4),('William',18,'Apraxia',5),('Ethan',24,'Argyria',5),('James',26,'Arthritis',6),('Alexander',35,'malaria',7),('Michael',31,'hepatitis',7),('Benjamin',36,'malaria',8),('Elijah',12,'Cerebral palsy',9),('Daniel',29,'Cholera',10),('Aiden',19,'Colitis',10),('Logan',55,'hepatitis',11),('Matthew',25,'Ebola',5),('Lucas',15,'Cretinism',12);
+INSERT INTO Patients(pName,pAge,pHistory) VALUES('Kaka Shams',34,'hepatitis');
+UPDATE Patients SET pHistory='malaria' WHERE pID= 4 ;
+SELECT * FROM Patients;
+
+INSERT INTO Visitors(DRID,PID,noOfVisits) VALUES(1,1,'5'),(1,2,'8'),(1,3,'7'),(2,1,'10'),(2,5,'15'),(3,2,'18'),(2,4,'20'),(3,3,'29'),(3,1,'4'),(1,5,'1'),(3,10,'18'),(3,5,'2'),(10,1,'19'),(11,2,'3'),(9,2,'4');
+SELECT * FROM Visitors;
+
+#lab-8,Step4: Add a column ‘experience’ to doctors table.
+ALTER TABLE Doctors ADD (experience INT NOT NULL);
+ALTER TABLE Doctors ADD (experience INT DEFAULT '5' NOT NULL);
+
+#lab-8,Step5: Drop Column experience from table doctors.
+ALTER TABLE Doctors DROP experience;
+
+# lab-8,Step6: [Adding a Constraint] Modify the patients table so that the patname is constrained to be UNIQUE.
+ALTER TABLE Patients ADD CONSTRAINT pName_un UNIQUE (pName);
+
+#lab-8,Step7: Drop constraint applied in step 6.
+ALTER TABLE Patients DROP INDEX pName_un;
+
+#lab-8,Step8: Change Data type of docfee from number to varchar.
+ALTER TABLE Doctors MODIFY COLUMN drFee varchar(10);
+#NOTE: Change the datatype of docfee again to number
+ALTER TABLE Doctors MODIFY COLUMN drFee INT;
+
+#Lab-8,Step9: Change the docfee of a doctor to some other value.
+UPDATE Doctors SET drFee = 5000 WHERE drID = '1';
+
+#lab-8, Step10: Change values for multiple columns.
+UPDATE Doctors SET drName = 'Amjad' WHERE drID = '1';
+UPDATE Doctors SET drFee = 5000, drName = 'Amjad' WHERE drID = '1';
+
+#############################################################################
+############################ TABKE JOIN #####################################
+################## Cartesian Join/ Cross Join################################
+
+SELECT Patients.pID, Doctors.drID FROM Patients, Doctors;
+
+# It can be written by using aliases as follows
+SELECT p.pID, d.drID FROM Patients p, Doctors d;
+
+# It can be written without using the table associations
+SELECT pID, drID FROM Patients, Doctors;
+
+# All rows of all columns can be retrieved as follows
+SELECT * FROM patients, doctors;
+
+#############################################################################
+############################ TABKE JOIN #####################################
+############################ Equijoin #######################################
+
+SELECT p.pID , d.drID, p.pName, d.drName FROM Patients p , Doctors d WHERE p.pName = d.drName;
+
+# Non Equijoins is used to return result from two or more tables where exact join is not possible.
+SELECT p.pID, p.pName, p.pAge, v.drID, v.noOfVisits FROM Patients p, Visitors v WHERE v.noOfVisits BETWEEN 5 AND 10;
