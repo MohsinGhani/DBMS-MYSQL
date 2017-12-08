@@ -1,0 +1,71 @@
+CREATE DATABASE HMS;
+USE HMS;
+
+CREATE TABLE Doctors(drID INT AUTO_INCREMENT, drName VARCHAR(30), drDept VARCHAR(30), drFee VARCHAR(30), PRIMARY KEY(drID));
+CREATE TABLE Patients(pID INT AUTO_INCREMENT, pName VARCHAR(30), pAge int, pHistory VARCHAR(100), PRIMARY KEY(pID));
+CREATE TABLE Visitors (vID INT AUTO_INCREMENT, primary key(vID), drID INT, FOREIGN KEY(drID) REFERENCES Doctors(drID),pID INT, FOREIGN KEY(pID) REFERENCES Patients(pID), noOfVisits VARCHAR(30));
+
+INSERT INTO Doctors(drName,drDept,drFee) VALUES('Dr Ashwaq Ali','General surgery','1500'),('Dr Anees Ali','Gynaecology','1100'),('Dr Shams Ilahi','Haematology','700'),('Dr Kasim Khan','Microbiology','800');
+INSERT INTO Doctors(drName,drDept,drFee) VALUES('Dr Kamal Munawar','Neonatal unit','100');
+UPDATE Doctors SET drDept='cardiology' WHERE drID= 4 ;
+SELECT * FROM Doctors;
+UPDATE Doctors SET drFee='800' WHERE drID = 1;
+
+INSERT INTO Patients(pName,pAge,pHistory) VALUES('Noah',20,'Abscess'),('Liam',22,'Anotia'),
+('Mason',25,'Anthrax'),('Jacob',15,'Appendicitis'),('William',18,'Apraxia'),('Ethan',24,'Argyria'),
+('James',26,'Arthritis'),('Alexander',35,'malaria'),('Michael',31,'hepatitis'),('Benjamin',36,'malaria'),
+('Elijah',12,'Cerebral palsy'),('Daniel',29,'Cholera'),('Aiden',19,'Colitis'),('Logan',55,'hepatitis'),
+('Matthew',25,'Ebola'),('Lucas',15,'Cretinism');
+INSERT INTO Patients(pName,pAge,pHistory) VALUES('Kaka Shams',34,'hepatitis');
+UPDATE Patients SET pHistory='malaria' WHERE pID = 4 ;
+SELECT * FROM Patients;
+
+INSERT INTO Visitors(drID,pID,noOfVisits) VALUES(1,1,'5'),(1,2,'8'),(1,3,'7'),(2,1,'10'),(2,5,'15'),(3,2,'18'),(2,4,'20'),(3,3,'29'),(3,1,'4'),(1,5,'1'),(3,1,'18'),(3,5,'2'),(1,1,'19'),(1,2,'3'),(4,2,'4');
+INSERT INTO Visitors(drID,pID,noOfVisits) VALUES(1,1,'5');
+SELECT * FROM Visitors;
+UPDATE Visitors SET noOfVisits=15 WHERE pID = 5;
+
+################################ LAB-9 ACTIVITY #########################################
+ALTER TABLE Visitors ADD (date_firstvisit DATE);
+ALTER TABLE Visitors ADD (noOfVisits INT);
+
+# you may wish to compare the doctors on the basis of their fee, Self Join
+SELECT d1.drName as Dr1Name, d2.drName as Dr2Name, d1.drFee as Dr1Fee, d2.drFee as Dr2Fee
+FROM Doctors d1, Doctors d2
+WHERE d1.drFee < d2.drFee
+ORDER BY d1.drFee;
+
+
+#Another query may request doctors with same fees, Self Join
+SELECT d1.drName, d2.drName, d1.drFee, d2.drFee FROM Doctors d1, Doctors d2 
+WHERE d1.drFee = d2.drFee AND d1.drName <> d2.drName
+ORDER BY d1.drFee;
+
+#Inner Join (simple join)
+SELECT p.pID, p.pName, d.drID, d.drName FROM Patients p INNER JOIN Doctors d ON p.pName = d.drName;
+
+#Left Outer Join (left waly table ka sara data dega or right waly table ka sirf common data dega jo common nhi hoga usko null kardega)
+SELECT p.pID, p.pName, d.drID, d.drName FROM Patients p LEFT OUTER JOIN Doctors d ON p.pName = d.drName;
+
+#RIGHT OUTER JOIN
+SELECT p.pID, p.pName, d.drID, d.drName FROM Patients p RIGHT OUTER JOIN Doctors d ON p.pName = d.drName;
+
+#Cartesian Join Syntax
+SELECT * FROM Patients, Doctors, Visitors;
+
+#Equijoin Syntax
+SELECT * FROM Patients, Doctors, Visitors WHERE Patients.pID = Visitors.pID AND Doctors.drID = Visitors.drID;
+
+#1- Show the names of the patients whose date of first visit to a doctor is same.
+#Self join
+SELECT p.pName FROM Visitors v1, Visitors v2WHERE v1.date_firstvisit = v2.date_firstvisit AND v1.drID <> v2.drID ;
+#INNER JOIN
+SELECT p.pName FROM Patients p INNER JOIN Visitors v ON v.date_firstvisit = v.date_firstvisit;
+
+#2- Show the patient names and Ids who are teenagers and have visited same doctor twice or more.
+SELECT p.pName, p.pID FROM Patients p WHERE p.pAge > 20 ;
+SELECT * FROM Visitors;
+
+#3- Show the name of the doctors who take more than Rs. 500 as their fee and have patients with more than 3 visits.
+
+#4- Show the patients, who are teenagers and have been diagnosed to have T.B and have never visited a doctor.
