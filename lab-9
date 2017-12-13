@@ -69,3 +69,82 @@ SELECT * FROM Visitors;
 #3- Show the name of the doctors who take more than Rs. 500 as their fee and have patients with more than 3 visits.
 
 #4- Show the patients, who are teenagers and have been diagnosed to have T.B and have never visited a doctor.
+
+########################
+CREATE DATABASE HMS;
+USE HMS;
+
+CREATE TABLE Doctors(drID INT AUTO_INCREMENT, drName VARCHAR(30), drDept VARCHAR(30), drFee VARCHAR(30), PRIMARY KEY(drID));
+CREATE TABLE Patients(pID INT AUTO_INCREMENT, pName VARCHAR(30), pAge int, pHistory VARCHAR(100), PRIMARY KEY(pID));
+CREATE TABLE Visitors (vID INT AUTO_INCREMENT, primary key(vID), drID INT, FOREIGN KEY(drID) REFERENCES Doctors(drID),pID INT, FOREIGN KEY(pID) REFERENCES Patients(pID), noOfVisits VARCHAR(30), date_firstvisit DATE);
+
+INSERT INTO Doctors(drName,drDept,drFee) VALUES('Dr Ashwaq Ali','General surgery','100'),
+('Anees Ali','Gynaecology','100'),('Shams Ilahi','Haematology','700'),('Kasim Khan','Microbiology','800');
+#,('Aneesa Gull','Gynaecology','1100'),('Manzoor Ilahi','Haematology','600'),('Malik Khan','Microbiology','700'),
+#('Baseer Muhammad','Gynaecology','1100'),('Noman Islam','Haematology','500'),('Kasim Khan','Microbiology','800');
+INSERT INTO Doctors(drName,drDept,drFee) VALUES('Dr Kamal Munawar','Neonatal unit','100');
+UPDATE Doctors SET drDept='cardiology' WHERE drID= 4 ;
+UPDATE Doctors SET drFee='800' WHERE drID = 1;
+SELECT * FROM Doctors;
+
+
+INSERT INTO Patients(pName,pAge,pHistory) VALUES('Noah',5,'Abscess'),('Liam',4,'Anotia'),
+('Mason',1,'Anthrax'),('Jacob',2,'Appendicitis'),('William',6,'Apraxia');
+#,('Ethan',24,'Argyria'),
+#('James',26,'Arthritis'),('Alexander',35,'malaria'),('Michael',31,'hepatitis'),('Benjamin',36,'malaria'),
+#('Elijah',12,'Cerebral palsy'),('Daniel',29,'Cholera'),('Aiden',19,'Colitis'),('Logan',55,'hepatitis'),
+#('Matthew',25,'Ebola'),('Lucas',15,'Cretinism');
+INSERT INTO Patients(pName,pAge,pHistory) VALUES('Kaka Shams',34,'hepatitis');
+UPDATE Patients SET pAge = '14' WHERE pID = 4 ;
+SELECT * FROM Patients;
+
+INSERT INTO Visitors(drID,pID,noOfVisits, date_firstvisit) VALUES(1,1,'10','2017-11-20'),(1,2,'20','2017-11-20'),
+(2,3,'15','2017-11-22'),(2,1,'10','2017-11-23'),(2,5,'15','2017-11-24');
+#,(3,2,'18','2017-11-25'),(2,4,'20','2017-11-26'),
+#(3,3,'29','2017-11-20'),(3,1,'4','2017-11-21'),(1,5,'1','2017-11-22'),(3,1,'18','2017-11-23'),(3,5,'2','2017-11-24'),
+#(1,1,'19','2017-11-25'),(1,2,'3','2017-11-26'),(4,2,'4','2017-11-27');
+UPDATE Visitors SET noOfVisits = 1 WHERE pID = 1;
+SELECT * FROM Visitors;
+
+################################ LAB-9 ACTIVITY #########################################
+ALTER TABLE Visitors ADD (date_firstvisit DATE);
+ALTER TABLE Visitors ADD (noOfVisits INT);
+
+# you may wish to compare the doctors on the basis of their fee, Self Join
+SELECT d1.drName as Dr1_Name, d2.drName as Dr2_Name, d1.drFee as Dr1Fee, d2.drFee as Dr2Fee
+FROM Doctors d1, Doctors d2 WHERE d1.drFee < d2.drFee ORDER BY d1.drFee;
+
+
+#Another query may request doctors with same fees, Self Join
+SELECT d1.drName, d2.drName, d1.drFee, d2.drFee FROM Doctors d1, Doctors d2 
+WHERE d1.drFee = d2.drFee AND d1.drName <> d2.drName ORDER BY d1.drFee;
+
+#Inner Join (simple join)
+SELECT p.pID, p.pName, d.drID, d.drName FROM Patients p INNER JOIN Doctors d ON p.pName = d.drName;
+
+#Left Outer Join (left waly table ka sara data dega or right waly table ka sirf common data dega jo common nhi hoga usko null kardega)
+SELECT p.pID, p.pName, d.drID, d.drName FROM Patients p LEFT OUTER JOIN Doctors d ON p.pName = d.drName;
+
+#RIGHT OUTER JOIN
+SELECT p.pID, p.pName, d.drID, d.drName FROM Patients p RIGHT OUTER JOIN Doctors d ON p.pName = d.drName;
+
+#Cartesian Join Syntax
+SELECT * FROM Patients, Doctors, Visitors;
+
+#Equijoin Syntax
+SELECT * FROM Patients, Doctors, Visitors WHERE Patients.pID = Visitors.pID AND Doctors.drID = Visitors.drID;
+
+#1- Show the names of the patients whose date of first visit to a doctor is same.
+#INNER JOIN
+SELECT p.pName FROM Patients p, Visitors v1 INNER JOIN Visitors v2 ON
+(v1.date_firstvisit = v2.date_firstvisit AND v1.vID <> v2.vID) AND (v1.drID = v2.drID) WHERE p.pID = v1.pID;
+SELECT * FROM Visitors;
+
+#2- Show the patient names and Ids who are teenagers and have visited same doctor twice or more.
+SELECT p.pName, p.pID, v.pID FROM Patients p INNER JOIN Visitors v ON (v.noOfVisits > 2) WHERE p.pAge > 20 AND (p.pID <> v.pID);
+SELECT * FROM Visitors;
+SELECT * FROM Patients;
+
+#3- Show the name of the doctors who take more than Rs. 500 as their fee and have patients with more than 3 visits.
+
+#4- Show the patients, who are teenagers and have been diagnosed to have T.B and have never visited a doctor.
