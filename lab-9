@@ -169,36 +169,30 @@ INSERT INTO Patients(pName,pAge,pHistory) VALUES('Noah',5,'Abscess'),('Liam',4,'
 ('Mason',1,'Anthrax'),('Jacob',2,'Appendicitis'),('William',6,'Apraxia');
 INSERT INTO Patients(pName,pAge,pHistory) VALUES('Kasim Khan',15,'T.B');
 UPDATE Patients SET pAge = '10' WHERE pID = 2 ;
+UPDATE Patients SET pHistory = 'T.B' WHERE pID = 8 ;
 SELECT * FROM Patients;
 
 
 INSERT INTO Visitors(drID,pID,noOfVisits, date_firstvisit) VALUES(1,1,'10','2017-11-20'),(1,2,'20','2017-11-20'),
 (2,3,'15','2017-11-22'),(2,1,'10','2017-11-23'),(2,5,'15','2017-11-24'),(4,8,'5','2017-12-02');
 UPDATE Visitors SET noOfVisits = 0 WHERE vID = 9;
+UPDATE Visitors SET drID = 4 WHERE vID = 7;
 UPDATE Visitors SET drID = 4 WHERE vID = 9;
 DELETE FROM Visitors WHERE vID = 11;
 SELECT * FROM Visitors;
 
 #1- Show the names of the patients whose date of first visit to a doctor is same. (INNER JOIN)
 SELECT p.pName FROM Patients p, Visitors v1 INNER JOIN Visitors v2 ON (v1.date_firstvisit = v2.date_firstvisit AND v1.vID <> v2.vID) AND (v1.drID = v2.drID) WHERE p.pID = v1.pID;
-#SELECT * FROM Visitors;
 
 #2- Show the patient names and Ids who are teenagers and have visited same doctor twice or more.
-SELECT p.pName as Patient_Name, p.pID as Patient_ID, v.pID as Patient_ID FROM Patients p INNER JOIN Visitors v ON (v.noOfVisits > 2 AND p.pID = v.pID) WHERE (p.pAge > 20);
-#SELECT * FROM Visitors;
-#SELECT * FROM Patients;
+SELECT p.pName as Patient_Name, p.pID as Patient_ID, v.pID as Patient_ID FROM Patients p INNER JOIN Visitors v ON (v.noOfVisits > 2 AND p.pID = v.pID) WHERE (p.pAge < 20);
 
 #3- Show the name of the doctors who take more than Rs. 500 as their fee and have patients with more than 3 visits.
 INSERT INTO Visitors(drID,pID,noOfVisits, date_firstvisit) VALUES(3,3,'10','2017-11-24');
 SELECT d.drName FROM Doctors d INNER JOIN Visitors v on (v.noOfVisits > 3) where d.drFee > 500 AND d.drID = v.drID;
-SELECT * FROM Visitors;
-SELECT * FROM Doctors;
 
 #4-Show the patients, who are teenagers and have been diagnosed to have T.B and have never visited a doctor.
 SELECT p.pName as Patient_Name, p.pAge as Patient_Age, p.pHistory as Patient_History FROM Patients p INNER JOIN Visitors v ON (v.noOfVisits = 0 AND p.pID = v.pID) WHERE p.pAge > 20 AND p.pHistory = 'T.B';
-SELECT * FROM Visitors;
-SELECT * FROM Patients;
-
 
 #5-If the query for the requirements in part 4 do not return any record, EITHER re-write the query OR insert data in the tables, so that the query returns at least one record [Again run the query in part 4]
 INSERT INTO Patients(pName,pAge,pHistory) VALUES('Mubeen',30,'T.B');
@@ -218,5 +212,7 @@ INSERT INTO Patients(pName,pAge,pHistory) VALUES('Kasim Khan',15,'T.B');
 INSERT INTO Visitors(drID,pID,noOfVisits, date_firstvisit) VALUES(4,8,'5','2017-12-02');
 
 #9-Show the patients who have same disease and have visited the same doctor for treatment.
-SELECT * FROM Patients p;
-SELECT * FROM Visitors v;
+SELECT p1.* FROM Patients p1 
+INNER JOIN Patients p2 on p1.pHistory = p2.pHistory AND p1.pName <> p2.pName
+INNER JOIN Visitors v1 on p2.pID = v1.pID
+INNER JOIN Visitors v2 on v1.drID = v2.drID AND v1.vID = v2.vID;
