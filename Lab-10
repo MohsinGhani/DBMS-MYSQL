@@ -1,0 +1,105 @@
+CREATE DATABASE HMS;
+USE HMS;
+
+CREATE TABLE Doctors(drID INT AUTO_INCREMENT, drName VARCHAR(30), drDept VARCHAR(30), drFee VARCHAR(30), PRIMARY KEY(drID));
+CREATE TABLE Patients(pID INT AUTO_INCREMENT, pName VARCHAR(30), pAge int, pHistory VARCHAR(100), PRIMARY KEY(pID));
+CREATE TABLE Visitors (vID INT AUTO_INCREMENT, primary key(vID), drID INT, FOREIGN KEY(drID) REFERENCES Doctors(drID),pID INT, FOREIGN KEY(pID) REFERENCES Patients(pID), noOfVisits VARCHAR(30));
+
+INSERT INTO Doctors(drName,drDept,drFee) VALUES('Dr Ashwaq Ali','General surgery','1500'),('Dr Anees Ali','Gynaecology','1100'),('Dr Shams Ilahi','Haematology','700'),('Dr Kasim Khan','Microbiology','800');
+INSERT INTO Doctors(drName,drDept,drFee) VALUES('Dr Kamal Munawar','Neonatal unit','100');
+INSERT INTO Doctors(drName,drDept,drFee) VALUES('Dr Ashwaq Ali','cardio','400');
+INSERT INTO Doctors(drName,drDept,drFee) VALUES('Dr Anees Ali','Neonatal unit','400');
+INSERT INTO Doctors(drName,drDept,drFee) VALUES ('farhan', 'T.B', 1225);
+UPDATE Doctors SET drDept='cardiology' WHERE drID= 4 ;
+SELECT * FROM Doctors;
+UPDATE Doctors SET drFee='800' WHERE drID = 1;
+
+INSERT INTO Patients(pName,pAge,pHistory) VALUES('Noah',20,'Abscess'),('Liam',22,'Anotia'),
+('Mason',25,'Anthrax'),('Jacob',15,'Appendicitis'),('William',18,'Apraxia'),('Ethan',24,'Argyria'),
+('James',26,'Arthritis'),('Alexander',35,'malaria'),('Michael',31,'hepatitis'),('Benjamin',36,'malaria'),
+('Elijah',12,'Cerebral palsy'),('Daniel',29,'Cholera'),('Aiden',19,'Colitis'),('Logan',55,'hepatitis'),
+('Matthew',25,'Ebola'),('Lucas',15,'Cretinism');
+INSERT INTO Patients(pName,pAge,pHistory) VALUES('Kaka Shams',34,'hepatitis');
+INSERT INTO Patients(pName,pAge,pHistory) VALUES('Kaka Khan',50,'hepatitis');
+UPDATE Patients SET pHistory='malaria' WHERE pID = 4 ;
+SELECT * FROM Patients;
+
+INSERT INTO Visitors(drID,pID,noOfVisits) VALUES(1,1,'5'),(1,2,'8'),(1,3,'7'),(2,1,'10'),(2,5,'15'),(3,2,'18'),(2,4,'20'),(3,3,'29'),(3,1,'4'),(1,5,'1'),(3,1,'18'),(3,5,'2'),(1,1,'19'),(1,2,'3'),(4,2,'4');
+INSERT INTO Visitors(drID,pID,noOfVisits) VALUES(1,1,'5');
+SELECT * FROM Visitors;
+UPDATE Visitors SET noOfVisits=15 WHERE pID = 5;
+
+################################ LAB-10 ACTIVITY #########################################
+#1. Write a query to find the number of patients who have visited any doctor on 30-JAN-1981.
+SELECT COUNT(date_of_visit) FROM Visitors v WHERE v.date_of_visit = '1981-01-30';
+INSERT INTO Visitors(drID,pID,date_of_visit,date_firstvisit,noOfVisits) VALUES(2,23,'1981-01-30','1980-01-30','15');
+
+#2. Write a query to find the number of patients who have been diagnosed by doctor ‘d01’.alter
+SELECT COUNT(v.pID) FROM Visitors v WHERE v.pID = '5';
+
+#3. Write a query to find the most elder patient.
+SELECT MAX(pAge) FROM patients;
+
+#4. Write a query to find the number of patients affected by each disease.
+SELECT pHistory, COUNT(pHistory) AS Number_of_Disease FROM Patients GROUP BY pHistory;
+
+##########################################################################################
+# COUNT():
+# The SQL COUNT function returns the number of rows in a table satisfying the criteria specified in the WHERE clause
+SELECT COUNT(*) as Total_Count FROM Doctors;
+SELECT COUNT(drDept) as Num_of_Departments FROM Doctors;
+
+# You would surely like to remove the duplicate values, so use DISTINCT
+SELECT COUNT(DISTINCT drDept) AS Num_of_Departments FROM Doctors;
+
+# you may like to see the entries for a specific department, so use WHERE Clause
+SELECT COUNT(drDept) AS cardio_entries FROM Doctors WHERE drDept = 'cardio';
+
+#GROUP BY use mostly with aggregate functions
+# you may wish to see the entries for each department separately, so use GROUP BY clause
+SELECT drDept, COUNT(drDept) AS number_of_doctors FROM Doctors GROUP BY drDept;
+
+# you may wish see the entries for those departments, who have more than 2 entries in the table.
+#HAVING use instead of where in GROUP of data
+SELECT drDept, COUNT(drID) AS number_of_doctors FROM Doctors GROUP BY drDept HAVING COUNT(drID) > 2;
+SELECT * FROM Doctors;
+
+#The SQL SUM function is used to return the sum of the values in a column or sum of an expression in a
+#SELECT statement. [The column must contain numbers]
+SELECT SUM(drFee) FROM Doctors;
+
+# an expression can also be used in the sum function
+SELECT SUM(drFee*2) FROM Doctors;
+
+# DISTICNT can be used to add only unique values
+SELECT SUM(DISTINCT drFee) FROM Doctors;
+
+# AVG()
+# The SQL AVERAGE function returns the average of the column values.
+SELECT AVG (drFee) FROM Doctors;
+
+# you may wish to see the rounded value 
+SELECT ROUND(AVG(drFee)) AS Rounded_Average FROM Doctors;
+
+# MAX()
+# The SQL MAX function returns the maximum of the column values.
+SELECT MAX(drFee) FROM doctors;
+
+# MIN()
+# The SQL MIN function returns the minimum of the column values.
+SELECT MIN(drFee) FROM doctors;
+
+# ABS()
+#This SQL ABS() returns the absolute value of a number passed as argument.
+SELECT ABS( AVG(drFee)) FROM Doctors;
+
+# CEIL() if 3.2 return 4
+# This SQL CEIL() will rounded up any positive or negative decimal value within the function upwards.
+SELECT CEIL( AVG(drFee)) FROM doctors;
+
+#FLOOR() if 3.8 return 3
+SELECT FLOOR(AVG(drFee)) FROM doctors;
+
+# MOD()
+# This SQL MOD() function returns the remainder from a division. 
+SELECT d1.drID, d2.drID, d1.drFee, d2.drFee, MOD (d1.drFee, d2.drFee) FROM doctors d1, doctors d2 WHERE d1.drID <> d2.drID;
