@@ -103,3 +103,28 @@ SELECT FLOOR(AVG(drFee)) FROM doctors;
 # MOD()
 # This SQL MOD() function returns the remainder from a division. 
 SELECT d1.drID, d2.drID, d1.drFee, d2.drFee, MOD (d1.drFee, d2.drFee) FROM doctors d1, doctors d2 WHERE d1.drID <> d2.drID;
+
+
+################################ LAB-10 HOME TASK ########################################
+#1- Write a query to find the number of patients according to age group. Only display the age groups under 40.
+SELECT pAge,COUNT(pAge) FROM Patients WHERE pAge < 40 GROUP BY pAge ;
+SELECT * FROM Patients;
+INSERT INTO Patients(pName,pAge,pHistory) VALUES('Huzaifa Alam',50,'hepatitis');
+
+#2- Write a query to find the number of visits made by each patient. Display the data in sorted order of patients.
+SELECT pID,noOfVisits FROM Visitors ORDER BY pID;
+
+#3- Write a query to find the average age of cardio patients.
+SELECT AVG(pAge) AS Avg_Age_of_cardio_patients FROM Patients WHERE pHistory = 'cardio';
+INSERT INTO Patients(pName,pAge,pHistory) VALUES('Ali Baba',38,'cardio'),('Shazaib Ali',18,'cardio');
+
+#4- Write a query to find the average age of patients affected by each disease. Display the rounded value of the average.
+SELECT pHistory as Disease, AVG(pAge) as AVG_Age, ROUND(AVG(pAge)) as Rounded_Age FROM Patients GROUP BY pHistory;
+
+#5- Write a query to find the sum of doctors’ fee for doctors in each department.
+SELECT drDept as Department, SUM(drFee) FROM Doctors GROUP BY drDept;
+SELECT * FROM Doctors;
+INSERT INTO Doctors(drName,drDept,drFee) VALUES ('Sazeeh Khan', 'Microbiology', 200);
+
+#6- Write a query to find the most recent date on which a visit has been made by some patient.
+SELECT MAX(date_of_visit) as Recent_date_of_visit FROM Visitors;
