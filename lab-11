@@ -1,0 +1,116 @@
+CREATE DATABASE HMS;
+USE HMS;
+
+CREATE TABLE Doctors(drID INT AUTO_INCREMENT, drName VARCHAR(30), drDept VARCHAR(30), drFee VARCHAR(30), PRIMARY KEY(drID));
+CREATE TABLE Patients(pID INT AUTO_INCREMENT, pName VARCHAR(30), pAge int, pHistory VARCHAR(100), PRIMARY KEY(pID));
+CREATE TABLE Visitors (vID INT AUTO_INCREMENT, primary key(vID), drID INT, FOREIGN KEY(drID) REFERENCES Doctors(drID),pID INT, FOREIGN KEY(pID) REFERENCES Patients(pID), noOfVisits VARCHAR(30));
+
+INSERT INTO Doctors(drName,drDept,drFee) VALUES('Dr Ashwaq Ali','General surgery','1500'),('Dr Anees Ali','Gynaecology','1100'),('Dr Shams Ilahi','Haematology','700'),('Dr Kasim Khan','Microbiology','800');
+INSERT INTO Doctors(drName,drDept,drFee) VALUES('Dr Kamal Munawar','Neonatal unit','100');
+INSERT INTO Doctors(drName,drDept,drFee) VALUES('Dr Ashwaq Ali','cardio','400');
+INSERT INTO Doctors(drName,drDept,drFee) VALUES('Dr Anees Ali','Neonatal unit','400');
+INSERT INTO Doctors(drName,drDept,drFee) VALUES ('farhan', 'T.B', 1225);
+UPDATE Doctors SET drDept='cardiology' WHERE drID= 4 ;
+SELECT * FROM Doctors;
+UPDATE Doctors SET drFee='800' WHERE drID = 1;
+
+INSERT INTO Patients(pName,pAge,pHistory) VALUES('Noah',20,'Abscess'),('Liam',22,'Anotia'),
+('Mason',25,'Anthrax'),('Jacob',15,'Appendicitis'),('William',18,'Apraxia'),('Ethan',24,'Argyria'),
+('James',26,'Arthritis'),('Alexander',35,'malaria'),('Michael',31,'hepatitis'),('Benjamin',36,'malaria'),
+('Elijah',12,'Cerebral palsy'),('Daniel',29,'Cholera'),('Aiden',19,'Colitis'),('Logan',55,'hepatitis'),
+('Matthew',25,'Ebola'),('Lucas',15,'Cretinism');
+INSERT INTO Patients(pName,pAge,pHistory) VALUES('Kaka Shams',34,'hepatitis');
+INSERT INTO Patients(pName,pAge,pHistory) VALUES('Kaka Khan',50,'hepatitis');
+UPDATE Patients SET pHistory='malaria' WHERE pID = 4 ;
+SELECT * FROM Patients;
+
+INSERT INTO Visitors(drID,pID,noOfVisits) VALUES(1,1,'5'),(1,2,'8'),(1,3,'7'),(2,1,'10'),(2,5,'15'),(3,2,'18'),(2,4,'20'),(3,3,'29'),(3,1,'4'),(1,5,'1'),(3,1,'18'),(3,5,'2'),(1,1,'19'),(1,2,'3'),(4,2,'4');
+INSERT INTO Visitors(drID,pID,noOfVisits) VALUES(1,1,'5');
+SELECT * FROM Visitors;
+UPDATE Visitors SET noOfVisits=15 WHERE pID = 5;
+
+################################ LAB-11 ACTIVITY ######################################
+
+# UNION
+# Def: By default the UNION behalves like UNION [DISTINCT], i.e. eliminates the duplicate rows.
+SELECT drID FROM Doctors UNION SELECT drID FROM visitors;
+SELECT drID FROM Doctors UNION SELECT pID FROM Patients;
+
+SELECT drID FROM Doctors UNION ALL SELECT drID FROM visitors;
+
+SELECT drID FROM Doctors WHERE drDept = 'cardio' UNION SELECT drID FROM visitors WHERE noOfVisits > 2 ORDER BY drID;
+
+# SINGLE ROW SUBQUERY Definition: It returns single row or record.
+ALTER TABLE Doctors MODIFY drFee INTEGER;
+# Print doctor id, name and fee where dr fee greater than dr1
+SELECT drID,drName,drFee FROM Doctors
+WHERE drFee > (
+	SELECT drFee FROM Doctors WHERE drID = 1
+);
+
+# we write neested query instead of table name and it's work as Drive Table
+SELECT drID FROM (
+	SELECT drID FROM doctors WHERE drFee <= 1000
+) as DoctorTable;
+
+# its not work without 'ANY' key word because we select single row but neested query return more than one result
+SELECT drID,drName,drFee FROM Doctors WHERE drFee > ANY(
+	SELECT drFee FROM Doctors WHERE drID = 1
+    OR drID = 2
+);
+
+#MULTIPLE ROW SUBQUERY Def: It returns multiple rows.
+
+# return multiple rows, print all drID,drName,drFee where drFee is as as cardio dr 
+SELECT drID,drName,drFee FROM Doctors WHERE drFee IN (
+	SELECT drFee FROM Doctors WHERE drDept = 'cardio'
+);
+
+#
+SELECT drID,drName,drFee FROM Doctors WHERE drFee NOT IN (
+	SELECT drFee FROM Doctors WHERE drDept = 'cardio'
+);
+
+# MULTIPLE COLUMN SUBQUERY Def: It returns records from multiple columns.
+
+#
+SELECT drID,noOfVisits FROM visitors WHERE (drID, noOfVisits)IN (
+	SELECT drID, noOfVisits FROM visitors GROUP BY drID
+);
+
+
+# CORRELATED SUBQUERY Def: A subquery that refers a table from the parent query.
+
+#
+SELECT v.drID, v.pID, v.noOfVisits FROM visitors v WHERE v.drID = (
+	SELECT d.drID FROM doctors d WHERE d.drName = 'Dr Shams Ilahi'
+);
+
+#print all records where visitor drID same as doctors drID
+SELECT d.drID, d.drName, d.drDept ,d.drFee FROM doctors d WHERE EXISTS (
+	SELECT v.drID FROM visitors v WHERE v.drID = d.drID
+);
+
+#
+SELECT d.drID, d.drName, d.drDept ,d.drFee FROM doctors d WHERE NOT EXISTS (
+	SELECT v.drID FROM visitors v WHERE v.drID = d.drID
+);
+
+#NESTED SUBQUERY Def: A subquery with in a subquery.
+#
+SELECT v.drID, v.pID, v. noOfVisits FROM visitors v WHERE v.drID IN (
+	SELECT d1.drID FROM doctors d1 WHERE d1.drName IN (
+		SELECT d2.drName FROM doctors d2 WHERE d2.drDept = 'cardio'
+	)
+);
+
+#
+SELECT p.pID, p.pName, p2.visitcount FROM patients p INNER JOIN (
+	SELECT pID, COUNT(noOfVisits) AS visitcount FROM visitors GROUP BY (pID)
+) p2 ON p.pID = p2.pID;
+
+# 1- Write a query that shows the average doctors’ fees per department for those departments in which the average fee is greater than the average fee of the doctors in cardio department.
+# 2- Write a query that shows the details for the patients who are elder than the youngest cardio patient.
+# 3- Write a query that shows the doctors who have patients with same date of first visit.
+# 4- Write a query that shows the doctors whose average fee is less than the min fee in the cardio department.
+# 5- Write a query that shows the patients who have visited the doctor with a fee higher than the max fee in the cardio department.
