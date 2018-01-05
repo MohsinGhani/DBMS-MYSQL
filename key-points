@@ -1,0 +1,27 @@
+######## CREATE ########
+CREATE DATABASE dbName;
+CREATE TABLE Doctors(drID INT AUTO_INCREMENT, drName VARCHAR(30), drDept VARCHAR(30), drFee VARCHAR(30), PRIMARY KEY(drID));
+
+#FOREIGN KEY
+CREATE TABLE Visitors (vID INT AUTO_INCREMENT, primary key(vID), drID INT, FOREIGN KEY(drID) REFERENCES Doctors(drID),pID INT, FOREIGN KEY(pID) REFERENCES Patients(pID), noOfVisits VARCHAR(30), date_firstvisit DATE);
+
+######## INSERT ########
+INSERT INTO Doctors(drName,drDept,drFee) VALUES('Dr Kamal Munawar','Neonatal unit','100');
+
+#insert multiple values
+INSERT INTO Doctors(drName,drDept,drFee) VALUES('Dr Ashwaq Ali','General surgery','100'),('Anees Ali','Gynaecology','100'),('Shams Ilahi','Haematology','700'),('Kasim Khan','Microbiology','800');
+
+######## UPDATE/EDIT ########
+UPDATE Doctors SET drDept='aaaaaaaaaa' WHERE drID= 0;
+
+######## ALTER ########
+# ADD NEW FIELD IN TABLE
+      ALTER TABLE Doctors ADD(field_name data_type);
+# with NOT NULL constraint
+      ALTER TABLE Doctors ADD(field_name data_type NOT NULL);
+# with default value
+      ALTER TABLE table_name ADD(field_name data_type DEFAULT 5 NOT NULL);
+# ADD CONSTRAINT ON FIELD
+      ALTER TABLE table_name ADD CONSTRAINT constraint_name UNIQUE(field_name);
+ # CHANGE COLUMN DATA TYPE
+      ALTER TABLE table_name MODIFY COLUMN column_name data_type;
