@@ -12,8 +12,10 @@ INSERT INTO Doctors(drName,drDept,drFee) VALUES('Dr Kamal Munawar','Neonatal uni
 INSERT INTO Doctors(drName,drDept,drFee) VALUES('Dr Ashwaq Ali','General surgery','100'),('Anees Ali','Gynaecology','100'),('Shams Ilahi','Haematology','700'),('Kasim Khan','Microbiology','800');
 
 ######## UPDATE/EDIT ########
-UPDATE Doctors SET drDept='aaaaaaaaaa' WHERE drID= 0;
-
+      UPDATE table_name SET column_name='updated_value' WHERE name_of_primary_key_field = 0;
+# update multiple columns
+      UPDATE table_name SET column_name='updated_value', column_name2 = 'updated_value2' WHERE name_of_primary_key_field = 0;
+      
 ######## ALTER ########
 # ADD NEW FIELD IN TABLE
       ALTER TABLE Doctors ADD(field_name data_type);
