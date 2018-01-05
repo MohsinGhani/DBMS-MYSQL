@@ -25,5 +25,14 @@ INSERT INTO Doctors(drName,drDept,drFee) VALUES('Dr Ashwaq Ali','General surgery
       ALTER TABLE table_name ADD(field_name data_type DEFAULT 5 NOT NULL);
 # ADD CONSTRAINT ON FIELD
       ALTER TABLE table_name ADD CONSTRAINT constraint_name UNIQUE(field_name);
- # CHANGE COLUMN DATA TYPE
+# CHANGE COLUMN DATA TYPE
       ALTER TABLE table_name MODIFY COLUMN column_name data_type;
+
+# SINGLE ROW SUBQUERY
+# Definition: this SUBQUERY returns single row or record.
+      SELECT * FROM table_name WHERE column_name > (
+            SELECT column_name FROM table_name WHERE name_of_primary_key = 1
+      );
+      SELECT * FROM table_name WHERE column_name = (
+            SELECT column_name FROM table_name WHERE name_of_primary_key = 1
+      );
