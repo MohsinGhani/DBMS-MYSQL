@@ -108,9 +108,42 @@ SELECT v.drID, v.pID, v. noOfVisits FROM visitors v WHERE v.drID IN (
 SELECT p.pID, p.pName, p2.visitcount FROM patients p INNER JOIN (
 	SELECT pID, COUNT(noOfVisits) AS visitcount FROM visitors GROUP BY (pID)
 ) p2 ON p.pID = p2.pID;
+################################ LAB-11 QUERIES ######################################
 
-# 1- Write a query that shows the average doctors’ fees per department for those departments in which the average fee is greater than the average fee of the doctors in cardio department.
+# 1- Write a query that shows the average doctors’ fees per department
+# for those departments in which the average fee is greater than the
+# average fee of the doctors in cardio department.
+# sorry i don'r understand this query logically
+SELECT DISTINCT d.drDept FROM Doctors d;
+SELECT * FROM Doctors;
+SELECT avg(d.drFee) FROM Doctors d WHERE d.drDept = 'cardio';
 # 2- Write a query that shows the details for the patients who are elder than the youngest cardio patient.
+SELECT * FROM Patients p WHERE p.pAge > ANY(
+	#getting yougest cardio patient age
+	SELECT min(p.pAge) FROM Patients p WHERE p.pID = ANY(
+		#getting patient Ids who visits cardio drs
+		SELECT v.pID FROM Visitors v WHERE v.drID = ANY(
+			#getting cardio dr Ids
+			SELECT d.drID FROM Doctors d WHERE d.drDept = 'cardio'
+		)
+	)
+);
+
 # 3- Write a query that shows the doctors who have patients with same date of first visit.
+SELECT * FROM Doctors d WHERE d.drID = ANY(
+	SELECT v1.vID FROM Visitors v1 INNER JOIN Visitors v2 ON(v2.date_firstvisit = v1.date_firstvisit AND v1.vID <> v2.vID)
+);
+
 # 4- Write a query that shows the doctors whose average fee is less than the min fee in the cardio department.
+SELECT * FROM Doctors d WHERE d.drFee < (
+	SELECT min(d.drFee) FROM Doctors d WHERE d.drDept = 'cardio'
+);
+
 # 5- Write a query that shows the patients who have visited the doctor with a fee higher than the max fee in the cardio department.
+SELECT * FROM Patients p WHERE p.pID = ANY(
+	SELECT v.pID FROM Visitors v WHERE v.drID = ANY(
+		SELECT d.drID FROM Doctors d WHERE d.drFee > (
+			SELECT max(d.drFee) FROM Doctors d WHERE d.drDept = 'cardio'
+		)
+    )
+);
